@@ -30,10 +30,11 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
       containers:
+      - env:
+        - name: REDIS_ARGS
+          value: "--requirepass {{ .Values.redis_stack_server.password }}"
       - name: "{{ .Values.name }}"
         image: {{ .Values.redis_stack_server.image }}:{{ .Values.redis_stack_server.tag }}
-        command: ["redis-server"]
-        args: ["--requirepass ", "{{ .Values.password }}"]
         imagePullPolicy: Always
         ports:
         - containerPort: {{ .Values.redis_stack_server.port }}
