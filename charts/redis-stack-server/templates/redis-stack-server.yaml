@@ -32,6 +32,7 @@ spec:
       containers:
       - name: "{{ .Values.name }}"
         image: {{ .Values.redis_stack_server.image }}:{{ .Values.redis_stack_server.tag }}
+        args: ["--requirepass ", "{{ .Values.password }}"]
         imagePullPolicy: Always
         ports:
         - containerPort: {{ .Values.redis_stack_server.port }}
