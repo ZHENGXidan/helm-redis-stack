@@ -13,6 +13,17 @@ spec:
   selector:
     app: "{{ .Values.name }}"
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.name }}-secret
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.name }}
+type: Opaque
+data:
+  redis-password: "--requirepass {{.Values.redis_stack_server.password}}" 
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -32,7 +43,10 @@ spec:
       containers:
       - env:
         - name: REDIS_ARGS
-          value: "--requirepass {{ .Values.redis_stack_server.password }}"
+          valueFrom:
+            secretKeyRef:
+              key: "redis-password"
+              name: "{{ .Values.name }}-secret"
         name: "{{ .Values.name }}"
         image: {{ .Values.redis_stack_server.image }}:{{ .Values.redis_stack_server.tag }}
         imagePullPolicy: Always
