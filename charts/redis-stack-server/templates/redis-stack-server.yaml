@@ -21,7 +21,7 @@ metadata:
   labels:
     app: {{ .Values.name }}
 type: Opaque
-data:
+stringData:
   redis-password: "--requirepass {{.Values.redis_stack_server.password}}" 
 ---
 apiVersion: apps/v1
